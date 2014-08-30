@@ -5,18 +5,22 @@ TARGET_SCREEN_WIDTH := 720
 # Release name
 PRODUCT_RELEASE_NAME := p880
 
-# Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/common_full_phone.mk)
+# Inherit common product files.
+$(call inherit-product, vendor/mahdi/config/common.mk)
 
-# This device has NFC
-$(call inherit-product, vendor/cm/config/nfc_enhanced.mk)
+# Inherit some common stuff.
+$(call inherit-product, vendor/mahdi/config/common_full_phone.mk)
 
 # Inherit device configuration
 $(call inherit-product, device/lge/p880/p880.mk)
 
+# Copy device specific prebuilt files.
+PRODUCT_COPY_FILES += \
+    vendor/mahdi/prebuilt/bootanimations/BOOTANIMATION-1280x768.zip:system/media/bootanimation.zip
+
 ## Device identifier. This must come after all inclusions
 PRODUCT_DEVICE := p880
-PRODUCT_NAME := cm_p880
+PRODUCT_NAME := mahdi_p880
 PRODUCT_BRAND := LG
 PRODUCT_MODEL := Optimus 4X HD
 PRODUCT_MANUFACTURER := LGE

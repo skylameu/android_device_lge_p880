@@ -23,4 +23,9 @@
     <!-- Processor menu, freq cap files -->
     <string name="max_cpu_freq_file">/sys/module/cpu_tegra/parameters/cpu_user_cap</string>
 
+    <!-- Whether device has hardware buttons -->
+    <bool name="config_has_hardware_buttons">true</bool>
+
+    <!-- LED Flashlight -->
+    <bool name="has_led_flash">true</bool>
 </resources>

@@ -282,6 +282,9 @@ service fuse_sdcard1 /system/bin/sdcard -u 1023 -g 1023 -d /mnt/media_rw/sdcard1
 
 on boot
 
+###TEMP set selinux to permissive
+    setenforce 0
+
     #Misc tweaks
     write /proc/sys/vm/highmem_is_dirtyable 1
     write /proc/sys/vm/min_free_kbytes 4096
