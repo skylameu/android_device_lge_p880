@@ -25,11 +25,14 @@
     <string name="config_datause_iface">rmnet0</string>
 
     <string-array translatable="false" name="config_tether_usb_regexs">
-    <item>"rndis0"</item>
+    <item>"usb\\d"</item>
+    <item>"rndis\\d"</item>
+    
     </string-array>
 
     <string-array translatable="false" name="config_tether_wifi_regexs">
         <item>"wlan0"</item>
+        <item>"softap.*"</item>
     </string-array>
 
     <!-- Array of ConnectivityManager.TYPE_xxxx values allowable for tethering -->
@@ -60,9 +63,13 @@
         <item>"mobile,0,0,0,-1,true"</item>
         <item>"mobile_mms,2,0,2,60000,true"</item>
         <item>"mobile_supl,3,0,2,60000,true"</item>
+        <item>"mobile_dun,4,0,2,60000,true"</item>
         <item>"mobile_hipri,5,0,3,60000,true"</item>
-        <item>"mobile_bluetooth,7,7,1,-1,true"</item>
-        <item>"wifi_p2p,13,1,0,-1,true"</item>
+        <item>"mobile_fota,10,0,2,60000,true"</item>
+        <item>"mobile_ims,11,0,2,60000,true"</item>
+        <item>"mobile_cbs,12,0,2,60000,true"</item>
+        <item>"mobile_ia,14,0,2,-1,true"</item>
+        <item>"bluetooth,7,7,2,-1,true"</item>
     </string-array>
 
     <!-- Array of ConnectivityManager.TYPE_xxxx constants for networks that may only
@@ -123,95 +130,75 @@
          The user is forbidden from setting the brightness below this level. -->
     <integer name="config_screenBrightnessSettingMinimum">1</integer>
 
+    <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
+         The N entries of this array define N  1 zones as follows:
+
+         Zone 0:        0 <= LUX < array[0]
+         Zone 1:        array[0] <= LUX < array[1]
+         ...
+         Zone N:        array[N - 1] <= LUX < array[N]
+         Zone N + 1     array[N] <= LUX < infinity
+
+         Must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLevels">
-        <item>13</item>
-        <item>26</item>
-        <item>66</item>
-        <item>82</item>
-        <item>133</item>
-        <item>166</item>
-        <item>266</item>
-        <item>300</item>
-        <item>433</item>
-        <item>466</item>
+        <item>2</item>
+        <item>6</item>
+        <item>40</item>
+        <item>350</item>
         <item>600</item>
-        <item>650</item>
-        <item>867</item>
-        <item>900</item>
-        <item>1300</item>
-        <item>2200</item>
-        <item>6000</item>
-        <item>9000</item>
+        <item>1000</item>
+        <item>1600</item>
+        <item>3000</item>
+        <item>10000</item>
     </integer-array>
 
+    <!-- Array of output values for LCD backlight corresponding to the LUX values
+         in the config_autoBrightnessLevels array.  This array should have size one greater
+         than the size of the config_autoBrightnessLevels array.
+         This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
-        <item>75</item>
-        <item>87</item>
-        <item>101</item>
-        <item>105</item>
-        <item>112</item>
-        <item>116</item>
-        <item>127</item>
-        <item>137</item>
-        <item>149</item>
-        <item>151</item>
-        <item>154</item>
-        <item>161</item>
-        <item>169</item>
-        <item>174</item>
-        <item>176</item>
-        <item>202</item>
-        <item>221</item>
-        <item>241</item>
-        <item>255</item>
+        <item>5</item>    <!-- 0-2 -->
+        <item>26</item>   <!-- 2-6 -->
+        <item>73</item>   <!-- 6-40 -->
+        <item>88</item>   <!-- 40-350 -->
+        <item>130</item>  <!-- 350-600 -->
+        <item>167</item>  <!-- 600-1000 -->
+        <item>204</item>  <!-- 1000-1600 -->
+        <item>240</item>  <!-- 1600-3000 -->
+        <item>254</item>  <!-- 3000-10000 -->
+        <item>255</item>  <!-- 10000+ -->
     </integer-array>
 
+    <!-- Array of output values for button backlight corresponding to the LUX values
+         in the config_autoBrightnessLevels array.  This array should have size one greater
+         than the size of the config_autoBrightnessLevels array.
+         This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessButtonBacklightValues">
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
     </integer-array>
 
-    <integer-array name="config_autoBrightnessKeyboardBacklightValues">
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-        <item>255</item>
-    </integer-array>
-
+    <!-- Hardware 'face' keys present on the device, stored as a bit field.
+         This integer should equal the sum of the corresponding value for each
+         of the following keys present:
+             1 - Home
+             2 - Back
+             4 - Menu
+             8 - Assistant (search)
+            16 - App switch
+         For example, a device with Home, Back and Menu keys would set this
+         config to 7. -->
     <integer name="config_deviceHardwareKeys">7</integer>
 
+    <!-- Disable lockscreen translucent decor by default -->
     <bool name="config_enableLockScreenTranslucentDecor">true</bool>
 
     <!-- If this is true, the screen will fade off. -->

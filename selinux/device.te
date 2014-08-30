@@ -1,3 +1,4 @@
 type knv_device, dev_type;
 type nvhost_device, dev_type;
 type nvhost_writable_device, dev_type, mlstrustedobject;
+type sysfs_devices_tegradc, dev_type;

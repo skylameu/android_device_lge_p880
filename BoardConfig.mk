@@ -1,10 +1,21 @@
 # inherit from the proprietary version
 -include vendor/lge/p880/BoardConfigVendor.mk
 
+#Build variant; user,userdebug,eng
+TARGET_BUILD_VARIANT := userdebug
+
+#GCC
+TARGET_GCC_VERSION_EXP := 4.8
+TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.8
+
+# Skip droiddoc build to save build time
+BOARD_SKIP_ANDROID_DOC_BUILD := true
+DISABLE_DROIDDOC := true
+
 # Board nameing
 TARGET_NO_RADIOIMAGE := true
 TARGET_BOARD_PLATFORM := tegra
-TARGET_BOOTLOADER_BOARD_NAME := p880
+TARGET_BOOTLOADER_BOARD_NAME := x3
 
 # Target arch settings
 TARGET_NO_BOOTLOADER := true
@@ -35,8 +46,6 @@ TARGET_RECOVERY_PRE_COMMAND := "/system/bin/setup-recovery"
 
 # Try to build the kernel
 TARGET_KERNEL_CONFIG := cyanogenmod_x3_defconfig
-# Keep this as a fallback
-TARGET_PREBUILT_KERNEL := device/lge/p880/kernel
 
 BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_FSTAB = device/lge/p880/fstab.x3
@@ -53,17 +62,16 @@ BOARD_USE_MHEAP_SCREENSHOT := true
 BOARD_EGL_SKIP_FIRST_DEQUEUE := true
 
 # Wifi related defines
-BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WLAN_DEVICE := bcmdhd
+BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
-BOARD_WLAN_DEVICE := bcmdhd
 WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/bcmdhd/parameters/firmware_path"
-WIFI_DRIVER_FW_PATH_STA := "/system/etc/firmware/fw_bcmdhd_p2p.bin"
-WIFI_DRIVER_FW_PATH_P2P := "/system/etc/firmware/fw_bcmdhd_p2p.bin"
-WIFI_DRIVER_FW_PATH_AP := "/system/etc/firmware/fw_bcmdhd_apsta.bin"
-BOARD_LEGACY_NL80211_STA_EVENTS := true
+WIFI_DRIVER_FW_PATH_STA := "/system/vendor/firmware/fw_bcmdhd.bin"
+WIFI_DRIVER_FW_PATH_P2P := "/system/vendor/firmware/fw_bcmdhd.bin"
+WIFI_DRIVER_FW_PATH_AP := "/system/vendor/firmware/fw_bcmdhd_apsta.bin"
 
 TARGET_BOOTANIMATION_PRELOAD := true
 TARGET_BOOTANIMATION_TEXTURE_CACHE := true
@@ -74,7 +82,12 @@ BOARD_BLUEDROID_VENDOR_CONF := device/lge/p880/bluetooth/vnd_bt.txt
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/lge/p880/bluetooth
 
 COMMON_GLOBAL_CFLAGS += -DMR0_AUDIO_BLOB -DMR0_CAMERA_BLOB -DNEEDS_VECTORIMPL_SYMBOLS
+
+# Enable various prefetch optimizations
+COMMON_GLOBAL_CFLAGS += -D__ARM_USE_PLD -D__ARM_CACHE_LINE_SIZE=32
+
 BOARD_HAVE_PRE_KITKAT_AUDIO_BLOB := true
+BOARD_HAVE_PRE_KITKAT_AUDIO_POLICY_BLOB := true
 
 ## Radio fixes
 BOARD_RIL_CLASS := ../../../device/lge/p880/ril/
