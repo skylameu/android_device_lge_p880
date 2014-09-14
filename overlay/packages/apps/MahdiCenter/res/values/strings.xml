@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+ * Copyright (C) 2013 Mahdi-ROM
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<resources>
+    <!-- URL's -->
+    <string name="download_url">http://d-h.st/users/alfsamsung/?fld_id=39430#files</string>
+    <string name="xda_url">http://forum.xda-developers.com/optimus-4x-hd/development/rom-mahdi-rom-2-7-unofficial-beta-t2867590</string>
+    <string name="xda_summary">Visit the Optimus 4X HD XDA thread</string>
+    
+    <!-- Update checker   
+    <string name="xml_url">http://files.mahdi-rom.com/ota/ota_kitkat.xml</string>
+    <string name="xml_url_kitkat">http://files.mahdi-rom.com/ota/ota_kitkat.xml</string>
+    <string name="notification_message">ROM update available</string>
+    -->  
+</resources>
