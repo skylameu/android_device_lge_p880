@@ -14,6 +14,9 @@ $(call inherit-product, vendor/mahdi/config/common_full_phone.mk)
 # Inherit device configuration
 $(call inherit-product, device/lge/p880/p880.mk)
 
+# Mahdi packages
+PRODUCT_PACKAGES += OmniSwitch
+
 # Copy device specific prebuilt files.
 PRODUCT_COPY_FILES += \
     vendor/mahdi/prebuilt/bootanimations/BOOTANIMATION-1280x768.zip:system/media/bootanimation.zip
