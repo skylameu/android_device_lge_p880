@@ -5,7 +5,7 @@
 TARGET_BUILD_VARIANT := userdebug
 
 #GCC
-TARGET_GCC_VERSION_EXP := 4.8
+TARGET_GCC_VERSION_EXP := 4.7
 TARGET_KERNEL_CUSTOM_TOOLCHAIN := arm-eabi-4.8
 
 # Skip droiddoc build to save build time
