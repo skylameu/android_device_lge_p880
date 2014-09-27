@@ -21,6 +21,7 @@
       <!-- Different CPU speeds as reported in
                   /sys/devices/system/cpu/cpu0/cpufreq/stats/time_in_state -->
   <array name="cpu.speeds">
+      <value>51000</value>   <!-- 51 MHz -->
       <value>102000</value>  <!-- 102 MHz -->
       <value>204000</value>  <!-- 204 MHz -->
       <value>340000</value>  <!-- 340 MHz -->
@@ -40,6 +41,7 @@
   <item name="cpu.awake">54.6</item>
   <!-- Power consumption at different speeds -->
   <array name="cpu.active">
+      <value>83</value>   <!-- 51 MHz -->
       <value>90</value>   <!-- 102 MHz -->
       <value>98</value>   <!-- 204 MHz -->
       <value>110</value>  <!-- 340 MHz -->
@@ -55,4 +57,12 @@
   </array>
   <!-- This is the battery capacity in mAh -->
   <item name="battery.capacity">2150</item>
+
+  <array name="wifi.batchedscan"> <!-- mA. Current figures based on lge hammerhead and 75.48mA while scanning -->
+      <value>.0076</value> <!-- 1-8/hr -->
+      <value>.0613</value> <!-- 9-64/hr -->
+      <value>.4845</value> <!-- 65-512/hr -->
+      <value>3.870</value> <!-- 513-4096/hr -->
+      <value>30.96</value> <!-- 4097-?/hr -->
+  </array>
 </device>

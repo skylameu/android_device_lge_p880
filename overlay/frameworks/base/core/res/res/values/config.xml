@@ -82,11 +82,29 @@
 
     <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
     <bool name="config_intrusiveNotificationLed">true</bool>
+    
+    <!-- Does the notification LED support multiple colors? Used to decide if the used can change the colors -->
+    <bool name="config_multiColorNotificationLed">false</bool>
+    
+    <!-- Is the battery LED intrusive? Used to decide if there should be a disable option -->
+    <bool name="config_intrusiveBatteryLed">true</bool>
 
+    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
     <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
 
-    <bool name="config_wifi_background_scan_support">true</bool>
+    <!-- Boolean indicating whether the wifi chipset supports background scanning mechanism.
+         This mechanism allows the host to remain in suspend state and the dongle to actively
+         scan and wake the host when a configured SSID is detected by the dongle. This chipset
+         capability can provide power savings when wifi needs to be always kept on. -->
+    <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
 
+    <!-- Wifi driver stop delay, in milliseconds.
+         Default value is 2 minutes. -->
+    <integer translatable="false" name="config_wifi_driver_stop_delay">80000</integer>
+
+    <!-- Wifi driver supports batched scan -->
+    <bool translatable="false" name="config_wifi_batched_scan_supported">true</bool>
+    
     <bool name="config_disableMenuKeyInLockScreen">true</bool>
 
     <bool name="config_automatic_brightness_available">true</bool>
