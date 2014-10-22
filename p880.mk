@@ -5,9 +5,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.hsxpa=2 \
     ro.ril.gprsclass=10 \
     
-# The gps config appropriate for this device
-$(call inherit-product, device/common/gps/gps_eu_supl.mk)
-
 $(call inherit-product-if-exists, vendor/lge/p880/p880-vendor.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/lge/p880/overlay
@@ -47,7 +44,9 @@ PRODUCT_COPY_FILES += \
 ## GPS
 PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/configs/lge.cer:system/etc/cert/lge.cer \
-    $(LOCAL_PATH)/configs/hmconfig.txt:system/etc/hmconfig.txt
+    $(LOCAL_PATH)/configs/hmconfig.txt:system/etc/hmconfig.txt \
+    $(LOCAL_PATH)/configs/gps.conf:system/etc/gps.conf \
+    $(LOCAL_PATH)/configs/SuplRootCert:system/etc/SuplRootCert
 
 ## Input
 PRODUCT_COPY_FILES += \
