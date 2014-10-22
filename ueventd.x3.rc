@@ -22,6 +22,7 @@
 /dev/focuser*	0660	media	camera
 /dev/torch*	0660	media	camera
 /dev/spdif*	0660	system	audio
+/dev/snd*	0666	system	audio
 /dev/tegra_dc*	0666	system	system
 /dev/ttyACM*	0660	radio	radio
 /dev/pts*	0660	radio	radio
