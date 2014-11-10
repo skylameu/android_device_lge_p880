@@ -4,6 +4,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 PRODUCT_PROPERTY_OVERRIDES += \
     ro.ril.hsxpa=2 \
     ro.ril.gprsclass=10 \
+    persist.sys.dalvik.multithread=true
     
 $(call inherit-product-if-exists, vendor/lge/p880/p880-vendor.mk)
 

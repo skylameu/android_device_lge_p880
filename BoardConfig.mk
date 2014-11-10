@@ -46,6 +46,7 @@ TARGET_RECOVERY_PRE_COMMAND := "/system/bin/setup-recovery"
 
 # Try to build the kernel
 TARGET_KERNEL_CONFIG := cyanogenmod_x3_defconfig
+#TARGET_KERNEL_CONFIG := cyanogenmod_x3-light_defconfig
 
 BOARD_HAS_NO_SELECT_BUTTON := true
 TARGET_RECOVERY_FSTAB = device/lge/p880/fstab.x3
