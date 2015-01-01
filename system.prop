@@ -9,6 +9,13 @@ rild.libpath=/system/lib/lge-ril.so
 rild.libargs=-d /dev/ttyACM0
 ro.telephony.ril_class=X3RIL
 
+#lge-ril.so
+persist.radio.rr.enable=1
+#From stock prop:300000. Default RIL timeout=60000
+ro.ril.wake_lock_timeout=300000
+#? ril.timeout.atcommand 0
+#? ril.timeout.javaril 0
+
 # enable insecure AGPS
 ro.ril.def.agps.mode=2
 
@@ -28,12 +35,6 @@ ro.wifi.channels=14
 #Disable HDCP in WifiDisplay
 persist.sys.wfd.nohdcp=1
 
-#AUDIO OFFLOAD
-av.offload.enable=false
-av.streaming.offload.enable=false
-#audio.offload.pcm.enable=true
-audio.offload.24bit.enable=0
-
 #Pre KitKat
 ro.bq.gpu_to_cpu_unsupported=1
 debug.camcorder.disablemeta=1
@@ -50,4 +51,4 @@ persist.sys.usb.config=mtp,adb
 debug.choreographer.skipwarning=99
 
 #crt-anim duration
-debug.electron.duration=550
+#debug.electron.duration=550
