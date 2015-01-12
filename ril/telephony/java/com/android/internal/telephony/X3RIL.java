@@ -13,6 +13,7 @@ import android.telephony.PhoneNumberUtils;
 
 public class X3RIL extends RIL implements CommandsInterface {
     private boolean sentHwBootstrap = false;
+    private boolean sentAtReady = false;
 
     public X3RIL(Context context, int networkMode, int cdmaSubscription, Integer instanceId) {
         super(context, networkMode, cdmaSubscription, instanceId);
@@ -29,13 +30,12 @@ public class X3RIL extends RIL implements CommandsInterface {
         //RIL_REQUEST_LGE_SEND_COMMAND
         RILRequest rrLSC = RILRequest.obtain(
                 0x113, null);
-        rrLSC.mParcel.writeInt(1);
         rrLSC.mParcel.writeInt(command);
         send(rrLSC);
         riljLog("X3RIL: LGE COMMAND " + (command) + " sendt");
     }
     
-    protected void
+/*    protected void
     setSpeechCodec(Object oldret) {
         if (oldret == null) {
             riljLog("ERROR: LGE_SELECTED_SPEECH_CODEC is NULL");
@@ -54,7 +54,7 @@ public class X3RIL extends RIL implements CommandsInterface {
 
         SelectedSpeechCodecIntent.putExtra("SelectedSpeechCodec", SelectedSpeechCodecNumber);
         mContext.sendBroadcast(SelectedSpeechCodecIntent);
-    }
+    }*/
 
     @Override
     public void
@@ -97,6 +97,23 @@ public class X3RIL extends RIL implements CommandsInterface {
         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
                     + " " + action + " " + cfReason + " " + serviceClass
                     + timeSeconds);
+
+        send(rr);
+    }
+    
+    @Override
+    public void
+    getIMEI(Message result) {
+        //Send command 0 when radio state is on
+        if (!sentAtReady) {
+            lgeSendCommand(0);
+            x3Sleep(100); //Test working ok without on my device.
+            sentAtReady = true;
+        }
+        
+        RILRequest rr = RILRequest.obtain(RIL_REQUEST_GET_IMEI, result);
+
+        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
 
         send(rr);
     }
@@ -166,17 +183,19 @@ public class X3RIL extends RIL implements CommandsInterface {
                     setNetworkSelectionModeAutomatic(null);
                 } else if (RadioState.RADIO_OFF == newState) {
                     sentHwBootstrap = false;
+                    sentAtReady = false;
                 }
                 return;
             case RIL_UNSOL_LGE_FACTORY_READY:
+                //Send command 1 when RIL is connected
                 if (!sentHwBootstrap) {
+                    lgeSendCommand(1);
                     lgeSendCommand(1);
                     sentHwBootstrap = true;
                 } else if (RILJ_LOGD) riljLog("sinking LGE request > " + response);
                 break;
             case RIL_UNSOL_LGE_PBREADY:
-                  x3Sleep(200);  
-                  lgeSendCommand(0);
+                if (RILJ_LOGD) riljLog("sinking LGE request > " + response);
                 break;
             case RIL_UNSOL_LGE_RESTART_RILD:
                 restartRild();
@@ -191,7 +210,8 @@ public class X3RIL extends RIL implements CommandsInterface {
                 break;
             case RIL_UNSOL_LGE_XCALLSTAT:
             case RIL_UNSOL_LGE_SELECTED_SPEECH_CODEC:
-                setSpeechCodec(ret);
+           //     setSpeechCodec(ret);
+                if (RILJ_LOGD) riljLog("sinking LGE request > " + response);
                 break;
             case RIL_UNSOL_LGE_SIM_STATE_CHANGED_NEW:
                 if (RILJ_LOGD) unsljLog(response);
@@ -202,7 +222,8 @@ public class X3RIL extends RIL implements CommandsInterface {
                 break;
         }
     }
-    
+
+// Stuff we ignore
     @Override
     public void getNeighboringCids(Message response) {
         AsyncResult.forMessage(response).exception =
@@ -212,16 +233,26 @@ public class X3RIL extends RIL implements CommandsInterface {
     }
     
     @Override
+    public void invokeOemRilRequestRaw(byte[] data, Message response) {
+        AsyncResult.forMessage(response).exception =
+            new CommandException(CommandException.Error.REQUEST_NOT_SUPPORTED);
+        response.sendToTarget();
+        response = null;
+    }
+   
+   @Override
+    public void setDataAllowed(boolean allowed, Message result) {
+        AsyncResult.forMessage(result).exception =
+            new CommandException(CommandException.Error.REQUEST_NOT_SUPPORTED);
+        result.sendToTarget();
+        result = null;
+    } 
+    
+    @Override
     public void getImsRegistrationState(Message result) {
-        if (mRilVersion >= 8) {
-            super.getImsRegistrationState(result);
-        } else {
-            if (result != null) {
-                CommandException ex = new CommandException(
-                    CommandException.Error.REQUEST_NOT_SUPPORTED);
-                AsyncResult.forMessage(result, null, ex);
-                result.sendToTarget();
-            }
-        }
+        AsyncResult.forMessage(result).exception =
+            new CommandException(CommandException.Error.REQUEST_NOT_SUPPORTED);
+        result.sendToTarget();
+        result = null;
     }
 }
