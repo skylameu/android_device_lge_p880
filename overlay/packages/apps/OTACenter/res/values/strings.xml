@@ -18,12 +18,9 @@
 <resources>
     <!-- URL's -->
     <string name="download_url">http://d-h.st/users/alfsamsung/?fld_id=42258#files</string>
-    <string name="xda_url">http://forum.xda-developers.com/optimus-4x-hd/development/rom-mahdi-rom-2-7-unofficial-beta-t2867590</string>
+    <string name="xda_url">http://forum.xda-developers.com/optimus-4x-hd/development/rom-euphoria-os-1-0-beta-unofficial-t2990338</string>
     <string name="xda_summary">Visit the Optimus 4X HD XDA thread</string>
     
-    <!-- Update checker   
-    <string name="xml_url">http://files.mahdi-rom.com/ota/ota_kitkat.xml</string>
-    <string name="xml_url_kitkat">http://files.mahdi-rom.com/ota/ota_kitkat.xml</string>
-    <string name="notification_message">ROM update available</string>
-    -->  
+    <!-- Update checker -->  
+    <string name="xml_url_kitkat">https://dl.dropboxusercontent.com/u/597850/eos_ota_file.xml</string>
 </resources>
