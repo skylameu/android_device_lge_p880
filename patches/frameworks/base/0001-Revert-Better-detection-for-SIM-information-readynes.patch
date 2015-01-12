@@ -1,0 +1,99 @@
+From fe98b9ba08de337f3494a89205d21538cdcdcc03 Mon Sep 17 00:00:00 2001
+From: alfsamsung <alfsamsung@hotmail.com>
+Date: Sat, 3 Jan 2015 01:40:45 +0100
+Subject: [PATCH] Revert "Better detection for SIM information readyness."
+
+This reverts commit 678c13c02a7a9c48766d45166c9756fb3b404bb9.
+---
+ .../server/location/GpsLocationProvider.java       | 26 ++--------------------
+ 1 file changed, 2 insertions(+), 24 deletions(-)
+
+diff --git a/services/core/java/com/android/server/location/GpsLocationProvider.java b/services/core/java/com/android/server/location/GpsLocationProvider.java
+index 8e33822..13ecd1f 100644
+--- a/services/core/java/com/android/server/location/GpsLocationProvider.java
++++ b/services/core/java/com/android/server/location/GpsLocationProvider.java
+@@ -25,7 +25,6 @@ import com.android.internal.location.ProviderRequest;
+ import com.android.internal.R;
+ import com.android.internal.telephony.Phone;
+ import com.android.internal.telephony.PhoneConstants;
+-import com.android.internal.telephony.TelephonyIntents;
+ 
+ import android.app.AlarmManager;
+ import android.app.AppOpsManager;
+@@ -244,11 +243,6 @@ public class GpsLocationProvider implements LocationProviderInterface {
+     private static final int GPS_GEOFENCE_ERROR_INVALID_TRANSITION = -103;
+     private static final int GPS_GEOFENCE_ERROR_GENERIC = -149;
+ 
+-    // TCP/IP constants.
+-    // Valid TCP/UDP port range is (0, 65535].
+-    private static final int TCP_MIN_PORT = 0;
+-    private static final int TCP_MAX_PORT = 0xffff;
+-
+     // Value of batterySaverGpsMode such that GPS isn't affected by battery saver mode.
+     private static final int BATTERY_SAVER_MODE_NO_CHANGE = 0;
+     // Value of batterySaverGpsMode such that GPS is disabled when battery saver mode
+@@ -354,7 +348,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
+     // properties loaded from PROPERTIES_FILE
+     private Properties mProperties;
+     private String mSuplServerHost;
+-    private int mSuplServerPort = TCP_MIN_PORT;
++    private int mSuplServerPort;
+     private String mC2KServerHost;
+     private int mC2KServerPort;
+     private boolean mSuplEsEnabled = false;
+@@ -511,10 +505,7 @@ public class GpsLocationProvider implements LocationProviderInterface {
+                     || Intent.ACTION_SCREEN_OFF.equals(action)
+                     || Intent.ACTION_SCREEN_ON.equals(action)) {
+                 updateLowPowerMode();
+-            } else if (action.equals(SIM_STATE_CHANGED)
+-                    || action.equals(TelephonyIntents.ACTION_SUBINFO_CONTENT_CHANGE)
+-                    || action.equals(TelephonyIntents.ACTION_SUBINFO_RECORD_UPDATED)) {
+-                Log.d(TAG, "received SIM realted action: " + action);
++            } else if (action.equals(SIM_STATE_CHANGED)) {
+                 TelephonyManager phone = (TelephonyManager)
+                         mContext.getSystemService(Context.TELEPHONY_SERVICE);
+                 String mccMnc = phone.getSimOperator();
+@@ -524,8 +515,6 @@ public class GpsLocationProvider implements LocationProviderInterface {
+                         reloadGpsProperties(context, mProperties);
+                         mNIHandler.setSuplEsEnabled(mSuplEsEnabled);
+                     }
+-                } else {
+-                    Log.d(TAG, "SIM MCC/MNC is still not available");
+                 }
+             }
+         }
+@@ -738,10 +727,6 @@ public class GpsLocationProvider implements LocationProviderInterface {
+         intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+         intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+         intentFilter.addAction(SIM_STATE_CHANGED);
+-        // TODO: remove the use TelephonyIntents. We are using it because SIM_STATE_CHANGED
+-        // is not reliable at the moment.
+-        intentFilter.addAction(TelephonyIntents.ACTION_SUBINFO_CONTENT_CHANGE);
+-        intentFilter.addAction(TelephonyIntents.ACTION_SUBINFO_RECORD_UPDATED);
+         mContext.registerReceiver(mBroadcastReceiver, intentFilter, null, mHandler);
+         Uri uri = Uri.parse("content://telephony/carriers/preferapn");
+         mContext.getContentResolver().registerContentObserver(
+@@ -956,11 +941,6 @@ public class GpsLocationProvider implements LocationProviderInterface {
+                 Log.e(TAG, "unable to parse SUPL_PORT: " + portString);
+             }
+         }
+-        if (mSuplServerHost != null
+-                && mSuplServerPort > TCP_MIN_PORT
+-                && mSuplServerPort <= TCP_MAX_PORT) {
+-            native_set_agps_server(AGPS_TYPE_SUPL, mSuplServerHost, mSuplServerPort);
+-        }
+     }
+ 
+     /**
+@@ -1003,8 +983,6 @@ public class GpsLocationProvider implements LocationProviderInterface {
+ 
+         if (enabled) {
+             mSupportsXtra = native_supports_xtra();
+-
+-            // TODO: remove the following native calls if we can make sure they are redundant.
+             if (mSuplServerHost != null) {
+                 native_set_agps_server(AGPS_TYPE_SUPL, mSuplServerHost, mSuplServerPort);
+             }
+-- 
+1.9.1
+
