@@ -12,6 +12,9 @@ TARGET_BUILD_VARIANT := userdebug
 BOARD_SKIP_ANDROID_DOC_BUILD := true
 DISABLE_DROIDDOC := true
 
+# Remove some stupid logging
+COMMON_GLOBAL_CFLAGS += -DSTOP_LOG_SPAM
+
 TARGET_SPECIFIC_HEADER_PATH := device/lge/p880/include
 
 # Board nameing
@@ -124,11 +127,13 @@ TARGET_BOOTANIMATION_PRELOAD := true
 TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 
 BOARD_SEPOLICY_DIRS += \
-    device/lge/p880/selinux
+    device/lge/p880/sepolicy
 
 BOARD_SEPOLICY_UNION += \
         file_contexts \
         genfs_contexts \
+        property_contexts \
+        service_contexts \
         bluetooth.te \
         device.te \
         domain.te \
@@ -139,6 +144,7 @@ BOARD_SEPOLICY_UNION += \
         keystore.te \
         lmkd.te \
         mediaserver.te \
+        platform_app.te \
         recovery.te \
         rild.te \
         sensors_config.te \
