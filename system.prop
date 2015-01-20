@@ -10,9 +10,9 @@ rild.libargs=-d /dev/ttyACM0
 ro.telephony.ril_class=X3RIL
 
 #lge-ril.so
-persist.radio.rr.enable=1
+#persist.radio.rr.enable=1
 #From stock prop:300000. Default RIL timeout=60000
-ro.ril.wake_lock_timeout=300000
+ro.ril.wake_lock_timeout=80000
 #? ril.timeout.atcommand 0
 #? ril.timeout.javaril 0
 
@@ -49,6 +49,3 @@ persist.sys.usb.config=mtp,adb
 #debug.choreographer.vsync=true
 #debug.choreographer.frametime=true
 debug.choreographer.skipwarning=99
-
-#crt-anim duration
-#debug.electron.duration=550

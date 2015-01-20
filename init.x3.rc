@@ -233,9 +233,10 @@ on boot
     write /proc/sys/vm/min_free_kbytes 4096
 
     # KSM
+    chown root system /sys/kernel/mm/ksm/run
+    chmod 0664 /sys/kernel/mm/ksm/run
     write /sys/kernel/mm/ksm/pages_to_scan 100
     write /sys/kernel/mm/ksm/sleep_millisecs 500
-    write /sys/kernel/mm/ksm/run 0
 
     # GPS init
     chown system system /sys/devices/platform/gps_gpio/poweron
@@ -271,6 +272,9 @@ on boot
 
     chown system system /sys/power/lge_logstart
     chmod 0660 /sys/power/lge_logstart
+    
+    #Tell lge-ril that raw-ip is ready
+    setprop net.rmmod.svc_done 1
 
 service nvcpud /system/bin/nvcpud
     class main
@@ -356,9 +360,6 @@ service wpa_supplicant /system/bin/wpa_supplicant \
     disabled
     oneshot
 
-    #Tell lge-ril that raw-ip is ready
-    setprop net.rmmod.svc_done 1
-
 # restart when servicemanager is restarted
 on property:init.svc.servicemanager=restarting
     restart lgdrm
@@ -373,11 +374,7 @@ on property:dev.bootcomplete=1
     write /proc/sys/net/core/rmem_max 1048576    #2097152
     write /proc/sys/net/core/wmem_max 1048576    #2097152
     
-    # KSM
-    chown root system /sys/kernel/mm/ksm/run
-    chmod 0664 /sys/kernel/mm/ksm/run
-    write /sys/kernel/mm/ksm/sleep_millisecs 500
-    write /sys/kernel/mm/ksm/pages_to_scan 100
+    # KSM off by default
     write /sys/kernel/mm/ksm/run 0
     
     # Hack to make 100% sure that cpu don't "hang" @screen cap freq
