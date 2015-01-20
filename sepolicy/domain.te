@@ -37,6 +37,4 @@ allow nvcpud self:process execmem;
 # Misc
 allow kernel fuse:dir search;
 allow netd kernel:system module_request;
-allow init net_radio_prop:property_service set;
-allow init lgsecclk_device:file execute_no_trans;
 allow sysinit calibration_data_file:dir getattr;
