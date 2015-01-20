@@ -16,12 +16,13 @@
   -->
 
 <resources>
-    <!-- Defines the implementation of the velocity tracker to be used for the panel expansion. Can
-         be 'platform' or 'noisy' (i.e. for noisy touch screens). -->
-    <string name="velocity_tracker_impl" translatable="false">noisy</string>
+    <!-- The default tiles to display in QuickSettings -->
+    <string name="quick_settings_tiles_default" translatable="false">
+        wifi,bt,data,cell,airplane,rotation,flashlight,location,notifications
+    </string>
 
     <!-- Show camera affordance on Keyguard -->
-    <bool name="config_keyguardShowCameraAffordance">false</bool>
+    <bool name="config_keyguardShowCameraAffordance">true</bool>
 
     <!-- Disable expensive shadows -->
     <bool name="config_recents_fake_shadows">true</bool>
@@ -30,7 +31,9 @@
     <bool name="config_recents_use_hardware_layers">true</bool>
 
     <!-- Whether to enable to show task manager or not -->
-    <bool name="config_showTaskManagerSwitcher">true</bool>
+    <!--This gives a small graphic bug when using quick pulldown, 
+    because of refreshTaskManagerView. -->
+    <bool name="config_showTaskManagerSwitcher">false</bool>
 
     <!-- Whether to enable data switch or not -->
     <bool name="config_enableDataSwitch">true</bool>

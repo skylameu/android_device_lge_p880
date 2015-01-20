@@ -20,6 +20,7 @@
     <string name="download_url">http://d-h.st/users/alfsamsung/?fld_id=42258#files</string>
     <string name="xda_url">http://forum.xda-developers.com/optimus-4x-hd/development/rom-euphoria-os-1-0-beta-unofficial-t2990338</string>
     <string name="xda_summary">Visit the Optimus 4X HD XDA thread</string>
+    <string name="changelog_url">https://plus.google.com/106575705593326563158/posts/PHW36Vnr8yF</string>
     
     <!-- Update checker -->  
     <string name="xml_url_kitkat">https://dl.dropboxusercontent.com/u/597850/eos_ota_file.xml</string>
