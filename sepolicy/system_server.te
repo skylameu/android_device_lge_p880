@@ -19,9 +19,9 @@ allow system_server gps_data_file:file rw_file_perms;
 allow system_server fuse:dir search;
 
 allow system_server system_server_service:service_manager add;
-allow system_server lgsecclk_device:service_manager add;
-allow system_server lgsecclk_device:process execmem;
-allow system_server lgsecclk_device:file { setattr rw_file_perms };
+allow system_server lgsecclk:service_manager add;
+allow system_server lgsecclk:process execmem;
+allow system_server lgsecclk:file { setattr rw_file_perms };
 
 allow system_server nvhost_writable_device:dir rw_dir_perms;
 allow system_server nvhost_writable_device:file rw_file_perms;
