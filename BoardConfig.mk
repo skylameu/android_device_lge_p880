@@ -149,8 +149,10 @@ BOARD_SEPOLICY_UNION += \
         recovery.te \
         rild.te \
         sensors_config.te \
+        servicemanager.te \
         surfaceflinger.te \
         system_app.te \
+        sysinit.te \
         system_server.te \
         ueventd.te \
         vold.te

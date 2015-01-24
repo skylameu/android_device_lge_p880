@@ -1,2 +1,1 @@
-allow init lgsecclk_device:file execute;
 allow init net_radio_prop:property_service set;

@@ -1,0 +1,7 @@
+allow sysinit init:unix_stream_socket connectto;
+allow sysinit proc:file write;
+allow sysinit proc_net:file write;
+allow sysinit property_socket:sock_file write;
+allow sysinit sysfs:file write;
+allow sysinit sysfs_devices_system_cpu:file write;
+allow sysinit system_data_file:file open; 
