@@ -16,11 +16,6 @@
   -->
 
 <resources>
-    <!-- The default tiles to display in QuickSettings -->
-    <string name="quick_settings_tiles_default" translatable="false">
-        wifi,bt,data,cell,airplane,rotation,flashlight,location,notifications
-    </string>
-
     <!-- Show camera affordance on Keyguard -->
     <bool name="config_keyguardShowCameraAffordance">true</bool>
 
