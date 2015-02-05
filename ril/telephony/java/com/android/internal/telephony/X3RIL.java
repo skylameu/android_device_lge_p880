@@ -108,7 +108,6 @@ public class X3RIL extends RIL implements CommandsInterface {
             lgeSendCommand(1);
         }
         lgeSendCommand(0);
-        x3Sleep(10); //Test working ok without on my device.
         
         RILRequest rr = RILRequest.obtain(RIL_REQUEST_GET_IMEI, result);
 
@@ -187,7 +186,6 @@ public class X3RIL extends RIL implements CommandsInterface {
             case RIL_UNSOL_LGE_FACTORY_READY:
                 //Send command 1 when RIL is connected
                 if (!sentHwBootstrap) {
-                    lgeSendCommand(1);
                     lgeSendCommand(1);
                     sentHwBootstrap = true;
                 } else if (RILJ_LOGD) riljLog("sinking LGE request > " + response);
