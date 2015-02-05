@@ -1,0 +1,34 @@
+From 39070e9d4e1b14b8ed6af2e91c0dcedc7bdbb24a Mon Sep 17 00:00:00 2001
+From: alfsamsung <alfsamsung@hotmail.com>
+Date: Mon, 2 Feb 2015 22:17:13 +0100
+Subject: [PATCH] surfaceflinger: Add a build prop to disable hw composer
+
+---
+ services/surfaceflinger/SurfaceFlinger.cpp | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
+index 2c6c77f..7719659 100644
+--- a/services/surfaceflinger/SurfaceFlinger.cpp
++++ b/services/surfaceflinger/SurfaceFlinger.cpp
+@@ -155,7 +155,6 @@ SurfaceFlinger::SurfaceFlinger()
+         mAnimCompositionPending(false),
+         mDebugRegion(0),
+         mDebugDDMS(0),
+-        mDebugDisableHWC(0),
+         mDebugDisableTransformHint(0),
+         mDebugInSwapBuffers(0),
+         mLastSwapBufferTime(0),
+@@ -172,6 +171,9 @@ SurfaceFlinger::SurfaceFlinger()
+ 
+     // debugging stuff...
+     char value[PROPERTY_VALUE_MAX];
++    
++    property_get("debug.sf.disablehwc", value, "0");
++    mDebugDisableHWC = atoi(value);
+ 
+     property_get("ro.bq.gpu_to_cpu_unsupported", value, "0");
+     mGpuToCpuSupported = !atoi(value);
+-- 
+1.9.1
+
