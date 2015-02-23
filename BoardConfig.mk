@@ -142,13 +142,13 @@ BOARD_SEPOLICY_UNION += \
         file.te \
         gpsd.te \
         keystore.te \
+        lge_service.te \
         lmkd.te \
         mediaserver.te \
         platform_app.te \
         recovery.te \
         rild.te \
         sensors_config.te \
-        servicemanager.te \
         surfaceflinger.te \
         system_app.te \
         sysinit.te \

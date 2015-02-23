@@ -1,3 +1,0 @@
-allow servicemanager lgsecclk:dir search;
-allow servicemanager lgsecclk:file { read write open };
-allow servicemanager lgsecclk:process getattr; 

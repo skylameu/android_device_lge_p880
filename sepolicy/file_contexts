@@ -14,6 +14,7 @@
 /dev/ttyACM0                      u:object_r:radio_device:s0
 /dev/pts[0-9]*                    u:object_r:radio_device:s0
 /dev/pts17                        u:object_r:gps_device:s0
+/dev/pts20                        u:object_r:radio_device:s0
 /dev/pts29                        u:object_r:radio_device:s0
 
 # camera
