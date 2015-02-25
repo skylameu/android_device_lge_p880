@@ -1,0 +1,209 @@
+From 12b36498ac006068d5ee7ef048f5211adcb98d18 Mon Sep 17 00:00:00 2001
+From: alfsamsung <alfsamsung@hotmail.com>
+Date: Wed, 25 Feb 2015 20:38:05 +0100
+Subject: [PATCH] HWC: Cleanup for HWComposer_v0
+
+Remove all ref to HWC_DEVICE_API_VERSION >= 1
+---
+ .../surfaceflinger/DisplayHardware/HWComposer.h    |  5 ++-
+ .../DisplayHardware/HWComposer_v0.cpp              | 52 ++++++----------------
+ services/surfaceflinger/Layer.cpp                  |  2 +
+ services/surfaceflinger/SurfaceFlinger.cpp         |  2 +
+ 4 files changed, 21 insertions(+), 40 deletions(-)
+
+diff --git a/services/surfaceflinger/DisplayHardware/HWComposer.h b/services/surfaceflinger/DisplayHardware/HWComposer.h
+index 4e3d1d1..7e84966 100644
+--- a/services/surfaceflinger/DisplayHardware/HWComposer.h
++++ b/services/surfaceflinger/DisplayHardware/HWComposer.h
+@@ -129,7 +129,6 @@ public:
+     //GPUTiledRect : function to find out if DR can be used in GPU Comp.
+     bool canUseTiledDR(int32_t id, Rect& dr);
+ #endif
+-
+     // get the releaseFence file descriptor for a display's framebuffer layer.
+     // the release fence is only valid after commit()
+     sp<Fence> getAndResetReleaseFence(int32_t id);
+@@ -178,14 +177,18 @@ public:
+         virtual sp<Fence> getAndResetReleaseFence() = 0;
+         virtual void setDefaultState() = 0;
+         virtual void setSkip(bool skip) = 0;
++#ifndef TARGET_NEEDS_HWC_V0
+         virtual void setIsCursorLayerHint(bool isCursor = true) = 0;
++#endif
+         virtual void setAnimating(bool animating) = 0;
+         virtual void setBlending(uint32_t blending) = 0;
+         virtual void setTransform(uint32_t transform) = 0;
+         virtual void setFrame(const Rect& frame) = 0;
+         virtual void setCrop(const FloatRect& crop) = 0;
+         virtual void setVisibleRegionScreen(const Region& reg) = 0;
++#ifndef TARGET_NEEDS_HWC_V0
+         virtual void setSidebandStream(const sp<NativeHandle>& stream) = 0;
++#endif
+ #ifdef QCOM_BSP
+         virtual void setDirtyRect(const Rect& dirtyRect) = 0;
+ #endif
+diff --git a/services/surfaceflinger/DisplayHardware/HWComposer_v0.cpp b/services/surfaceflinger/DisplayHardware/HWComposer_v0.cpp
+index 39c369f..59b484e 100644
+--- a/services/surfaceflinger/DisplayHardware/HWComposer_v0.cpp
++++ b/services/surfaceflinger/DisplayHardware/HWComposer_v0.cpp
+@@ -179,8 +179,7 @@ HWComposer::HWComposer(
+     loadHwcModule();
+ 
+     // If we have no HWC, or a pre-1.1 HWC, an FB dev is mandatory.
+-    if ((!mHwc || !hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1))
+-            && !mFbDev) {
++    if (!mHwc && !mFbDev) {
+         ALOGE("ERROR: failed to open framebuffer (%s), aborting",
+                 strerror(-fberr));
+         abort();
+@@ -219,8 +218,8 @@ HWComposer::HWComposer(
+     }
+ 
+     if (mFbDev) {
+-        ALOG_ASSERT(!(mHwc && hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1)),
+-                "should only have fbdev if no hwc or hwc is 1.0");
++        ALOG_ASSERT(!(mHwc),
++                "should only have fbdev if no hwc");
+ 
+         DisplayData& disp(mDisplayData[HWC_DISPLAY_PRIMARY]);
+         disp.connected = true;
+@@ -436,6 +435,7 @@ status_t HWComposer::queryDisplayProperties(int disp) {
+         ALOGE("%s: Invalid display config! %d", __FUNCTION__, currentConfig);
+         currentConfig = 0;
+     }
++
+     mDisplayData[disp].currentConfig = currentConfig;
+     for (size_t c = 0; c < numConfigs; ++c) {
+         err = mHwc->getDisplayAttributes(mHwc, disp, configs[c],
+@@ -814,12 +814,8 @@ status_t HWComposer::setPowerMode(int disp, int mode) {
+                 eventControl(disp, HWC_EVENT_VSYNC, 0);
+             }
+         }
+-        if (hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_4)) {
+-            return (status_t)mHwc->setPowerMode(mHwc, disp, mode);
+-        } else {
+             return (status_t)hwcBlank(mHwc,
+                     mode == HWC_POWER_MODE_OFF ? 1 : 0);
+-        }
+     }
+     return NO_ERROR;
+ }
+@@ -827,29 +823,14 @@ status_t HWComposer::setPowerMode(int disp, int mode) {
+ status_t HWComposer::setActiveConfig(int disp, int mode) {
+     LOG_FATAL_IF(disp >= VIRTUAL_DISPLAY_ID_BASE);
+     DisplayData& dd(mDisplayData[disp]);
+-    if (mHwc && hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_4)) {
+-        status_t status = static_cast<status_t>(
+-                mHwc->setActiveConfig(mHwc, disp, mode));
+-        if (status == NO_ERROR) {
+-            dd.currentConfig = mode;
+-        } else {
+-            ALOGE("%s Failed to set new config (%d) for display (%d)",
+-                    __FUNCTION__, mode, disp);
+-        }
+-        return status;
+-    } else {
+-        LOG_FATAL_IF(mode != 0);
+-    }
++    LOG_FATAL_IF(mode != 0);
++
+     return NO_ERROR;
+ }
+ 
+ int HWComposer::getActiveConfig(int disp) const {
+     LOG_FATAL_IF(disp >= VIRTUAL_DISPLAY_ID_BASE);
+-    if (mHwc && hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_4)) {
+-        return mHwc->getActiveConfig(mHwc, disp);
+-    } else {
+-        return 0;
+-    }
++    return 0;
+ }
+ 
+ void HWComposer::disconnectDisplay(int disp) {
+@@ -873,7 +854,7 @@ int HWComposer::getVisualID() const {
+ }
+ 
+ bool HWComposer::supportsFramebufferTarget() const {
+-    return (mHwc && hwcHasApiVersion(mHwc, HWC_DEVICE_API_VERSION_1_1));
++    return false;
+ }
+ 
+ int HWComposer::fbPost(int32_t id,
+@@ -968,10 +949,6 @@ public:
+     virtual uint32_t getHints() const {
+         return getLayer()->hints;
+     }
+-    virtual int getAndResetReleaseFenceFd() {
+-        // not supported on VERSION_03
+-        return -1;
+-    }
+     virtual sp<Fence> getAndResetReleaseFence() {
+         // not supported on VERSION_03
+         return Fence::NO_FENCE;
+@@ -999,7 +976,6 @@ public:
+         }
+         return false;
+     }
+-
+     virtual void setPlaneAlpha(uint8_t alpha) {
+         bool forceSkip = false;
+         // PREMULT on the statusbar layer will artifact miserably on VERSION_03
+@@ -1034,11 +1010,12 @@ public:
+             getLayer()->flags &= ~HWC_SKIP_LAYER;
+         }
+     }
+-    virtual void setIsCursorLayerHint(bool isCursor) {
+-        // not supported on VERSION_03, I think.
+-    }
+     virtual void setAnimating(bool animating) {
+-        // Not bothering for legacy path
++        if (animating) {
++            getLayer()->flags |= HWC_SCREENSHOT_ANIMATOR_LAYER;
++        } else {
++            getLayer()->flags &= ~HWC_SCREENSHOT_ANIMATOR_LAYER;
++        }
+     }
+     virtual void setBlending(uint32_t blending) {
+         getLayer()->blending = blending;
+@@ -1071,9 +1048,6 @@ public:
+         SharedBuffer const* sb = reg.getSharedBuffer(&visibleRegion.numRects);
+         visibleRegion.rects = reinterpret_cast<hwc_rect_t const *>(sb->data());
+     }
+-    virtual void setSidebandStream(const sp<NativeHandle>& stream) {
+-        // not supported on VERSION_03, I think.
+-    }
+ #ifdef QCOM_BSP
+     virtual void setDirtyRect(const Rect& dirtyRect) {
+         // Unimplemented
+diff --git a/services/surfaceflinger/Layer.cpp b/services/surfaceflinger/Layer.cpp
+index 86c9dda..3d158e4 100755
+--- a/services/surfaceflinger/Layer.cpp
++++ b/services/surfaceflinger/Layer.cpp
+@@ -557,7 +557,9 @@ void Layer::setPerFrameData(const sp<const DisplayDevice>& hw,
+     layer.setVisibleRegionScreen(visible);
+ 
+     if (mSidebandStream.get()) {
++#ifndef TARGET_NEEDS_HWC_V0
+         layer.setSidebandStream(mSidebandStream);
++#endif
+     } else {
+         // NOTE: buffer can be NULL if the client never drew into this
+         // layer yet, or if we ran out of memory
+diff --git a/services/surfaceflinger/SurfaceFlinger.cpp b/services/surfaceflinger/SurfaceFlinger.cpp
+index 48743af..10b37ca 100644
+--- a/services/surfaceflinger/SurfaceFlinger.cpp
++++ b/services/surfaceflinger/SurfaceFlinger.cpp
+@@ -1257,7 +1257,9 @@ void SurfaceFlinger::setUpHWComposer() {
+                 for (size_t i=0 ; cur!=end && i<count ; ++i, ++cur) {
+                     const sp<Layer>& layer(currentLayers[i]);
+                     if (layer->isPotentialCursor()) {
++#ifndef TARGET_NEEDS_HWC_V0
+                         cur->setIsCursorLayerHint();
++#endif
+                         break;
+                     }
+                 }
+-- 
+1.9.1
+

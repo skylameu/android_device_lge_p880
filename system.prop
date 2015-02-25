@@ -49,6 +49,3 @@ persist.sys.usb.config=mtp,adb
 #debug.choreographer.vsync=true
 #debug.choreographer.frametime=true
 debug.choreographer.skipwarning=99
-
-#Temp fix for lag in 2D Graphics
-debug.sf.disablehwc=1
